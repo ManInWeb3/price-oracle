@@ -5,8 +5,10 @@ services:
     image: 'postgres:latest'
     ports:
       - 15432:5432
-    environment:
-      POSTGRES_PASSWORD: Zaq1Xsw2
+    # environment:
+    #   POSTGRES_PASSWORD: Zaq1Xsw2
+    env_file:
+      - _env-db-DEV
     networks:
       - postgres-network
     volumes:
@@ -21,6 +23,6 @@ services:
     ports:
       - 8080:8080
 
-networks: 
+networks:
   postgres-network:
     driver: bridge
