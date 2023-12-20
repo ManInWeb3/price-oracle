@@ -145,8 +145,6 @@ func main() {
 	}
 	defer db.Close()
 
-	initDB(db)
-
 	// Run node's heartbeat
 	go heartbeat(ctx, db)
 	// create a new PubSub service using the GossipSub router

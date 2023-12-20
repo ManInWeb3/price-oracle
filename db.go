@@ -24,35 +24,6 @@ func getEnvVar(key string) string {
 	return os.Getenv(key)
 }
 
-func initDB(db *sql.DB) {
-
-	_, err := db.Exec(`
-		CREATE TABLE IF NOT EXISTS prices (
-				"id" bigint NOT NULL,
-				"price" real NOT NULL,
-				"timestamp" varchar(15) NOT NULL,
-				"signatures" bytea ARRAY NULL,
-				"inserted" timestamp NOT NULL,
-				PRIMARY KEY ("id")
-		);
-	`)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXISTS heartbeat (
-			"timestamp" timestamp NOT NULL default current_timestamp,
-			"nodename" varchar(15) NOT NULL,
-			PRIMARY KEY ("nodename")
-		);
-	`)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-}
-
 func writePriceToDB(db *sql.DB) {
 	for id, p := range preDbPrices {
 
