@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_PASSWORD: Zaq1Xsw2
+    networks:
+      - postgres-network
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+      - ./db-init.d/:/docker-entrypoint-initdb.d/
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - postgres-network
+    ports:
+      - 8080:8080
+
+networks: 
+  postgres-network:
+    driver: bridge
