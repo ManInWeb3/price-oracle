@@ -20,6 +20,7 @@ import (
 	"github.com/sony/sonyflake"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/joho/godotenv"
 )
 
 const (
@@ -31,6 +32,7 @@ const (
 )
 
 type Config struct {
+	dbEnv            string
 	sourcePort       int
 	nodeName         string
 	bootstrapAddr    string
@@ -51,7 +53,7 @@ var (
 )
 
 func init() {
-
+	flag.StringVar(&config.dbEnv, "dbEnv", "_env-db-DEV", ".env file with db credentials")
 	flag.StringVar(&config.nodeName, "n", "node1", "Node name")
 	flag.IntVar(&config.sourcePort, "s", 0, "Source port number")
 	flag.StringVar(&config.bootstrapAddr, "b", "", "Bootstrap multiaddr string")
@@ -129,9 +131,9 @@ func main() {
 	fmt.Printf("\n")
 	// Connect to the DB
 	// Read database connection details from .env-db file.
-	dbName := getEnvVar("DB_NAME")
-	dbUser := getEnvVar("DB_USER")
-	dbPassword := getEnvVar("DB_PASSWORD")
+	dbName := getEnvVar("POSTGRES_DB")
+	dbUser := getEnvVar("POSTGRES_USER")
+	dbPassword := getEnvVar("POSTGRES_PASSWORD")
 	dbHost := getEnvVar("DB_HOST")
 	dbPort := getEnvVar("DB_PORT")
 	connStr := fmt.Sprintf(
@@ -406,4 +408,13 @@ func GetLatestEthereumPrice() (float64, string) {
 	ethereumPrice := geckoResponse.Ethereum.USD
 	timestamp := fmt.Sprint(time.Now().Unix())
 	return ethereumPrice, timestamp
+}
+
+func getEnvVar(key string) string {
+	err := godotenv.Load(config.dbEnv)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return os.Getenv(key)
 }

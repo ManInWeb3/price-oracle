@@ -4,25 +4,13 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/lib/pq"
-
-	"github.com/joho/godotenv"
 )
 
 var DAY0 = time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
-
-func getEnvVar(key string) string {
-	err := godotenv.Load(".env-db")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	return os.Getenv(key)
-}
 
 func writePriceToDB(db *sql.DB) {
 	for id, p := range preDbPrices {
