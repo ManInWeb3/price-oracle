@@ -8,7 +8,12 @@ if [ -z "${NUM_NODES}" ]; then
 fi
 
 MainBin="./oracle"
+
+# Generate a new Rendezvous string on each run
+# This is required only to make connections bootstrapping faster in DEV envs
+# Can be fixed with bootstrap nodes
 Rendezvous=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 16; echo)
+
 for (( i=0; i<$NUM_NODES; i+=1 )); do
   $MainBin -n node$i -rendezvousString $Rendezvous  > >(tee -a node$i.log) 2>&1 &
 done
